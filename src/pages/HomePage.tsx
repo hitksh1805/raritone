@@ -36,7 +36,7 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col items-center justify-center px-4 relative">
         <div className="text-center">
-          {/* RARITONE Logo */}
+          {/* RARITONE Logo - Centered and prominent */}
           <div className="mb-6">
             <h1 className="text-5xl md:text-7xl font-bold tracking-wider text-white">
               <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
@@ -45,8 +45,8 @@ const HomePage = () => {
             </h1>
           </div>
           
-          {/* Tagline */}
-          <p className="text-base md:text-lg text-gray-300 mb-10 font-light">
+          {/* Tagline - Made smaller */}
+          <p className="text-sm md:text-base text-gray-300 mb-10 font-light">
             Fashion Meets Technology
           </p>
           
