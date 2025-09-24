@@ -27,27 +27,8 @@ const LatestArrivalsCarousel: React.FC = () => {
 
   return (
     <div className="relative w-full max-w-full">
-      {/* Translucent Glass Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        disabled={currentIndex === 0}
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--text-primary)] hover:bg-white/20 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
-        style={{ backdropFilter: 'blur(15px)' }}
-      >
-        <ChevronLeft size={28} />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        disabled={currentIndex >= maxIndex}
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--text-primary)] hover:bg-white/20 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
-        style={{ backdropFilter: 'blur(15px)' }}
-      >
-        <ChevronRight size={28} />
-      </button>
-
-      {/* Full Width Products Container with Proper Spacing */}
-      <div className="w-full overflow-hidden px-20">
+      {/* Full Width Products Container without side padding */}
+      <div className="w-full overflow-hidden">
         <motion.div
           className="flex gap-8"
           animate={{ x: `${-currentIndex * (100 / itemsPerView)}%` }}

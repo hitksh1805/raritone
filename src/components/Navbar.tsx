@@ -203,8 +203,8 @@ const Navbar: React.FC<NavbarProps> = memo(({ onSearchOpen, onCartOpen, pageTitl
                     maxWidth: isMobile ? '240px' : '320px',
                     objectFit: 'contain',
                     filter: 'brightness(1.2) drop-shadow(0 0 20px rgba(148, 137, 121, 0.3))',
-                    opacity: isHomepage ? logoOpacity : 1,
-                    transform: isHomepage ? `scale(${logoScale})` : 'scale(1)'
+                    opacity: 1,
+                    transform: 'scale(1)'
                   }}
                 />
               )}

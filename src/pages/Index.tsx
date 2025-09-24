@@ -311,7 +311,7 @@ const Index = () => {
       <section className="w-full">
         <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] overflow-hidden">
           <img
-            src="/placeholder-landscape-1.jpg"
+            src="/image.png"
             alt="RARITONE Collection"
             className="w-full h-full object-cover object-center"
           />
@@ -365,7 +365,7 @@ const Index = () => {
       <section className="w-full">
         <div className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] overflow-hidden">
           <img
-            src="/placeholder-landscape-2.jpg"
+            src="/image.png"
             alt="RARITONE Latest Collection"
             className="w-full h-full object-cover object-center"
           />
