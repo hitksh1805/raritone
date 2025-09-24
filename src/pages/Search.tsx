@@ -225,7 +225,7 @@ const SearchPage = () => {
             className="relative max-w-3xl mx-auto mb-12"
           >
             <div className="relative">
-              <div className="absolute left-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <div className="absolute left-6 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
                 <Search className="text-[var(--accent-color)]" size={24} />
               </div>
               <input
@@ -233,11 +233,11 @@ const SearchPage = () => {
                 placeholder="Search for Products, Categories..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-16 pr-16 py-6 text-xl bg-[var(--secondary-bg)] border-2 border-[var(--border-color)] rounded-2xl color-[var(--text-primary)] placeholder-[var(--accent-color)] focus:outline-none focus:border-[var(--accent-color)] focus:ring-4 focus:ring-[var(--accent-color)]/20 transition-all duration-300"
+                className="w-full pl-16 pr-16 py-6 text-xl bg-[var(--secondary-bg)] border-2 border-[var(--border-color)] rounded-2xl text-[var(--text-primary)] placeholder-[var(--accent-color)] focus:outline-none focus:border-[var(--accent-color)] focus:ring-4 focus:ring-[var(--accent-color)]/20 transition-all duration-300"
                 autoFocus
               />
               {searchQuery && (
-                <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
+                <div className="absolute right-6 top-1/2 transform -translate-y-1/2 z-10">
                   <button
                     onClick={() => setSearchQuery('')}
                     className="text-[var(--accent-color)] hover:text-[var(--text-primary)] transition-colors p-1"

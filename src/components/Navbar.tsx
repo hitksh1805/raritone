@@ -195,14 +195,16 @@ const Navbar: React.FC<NavbarProps> = memo(({ onSearchOpen, onCartOpen, pageTitl
                 <img
                   src="/IMG-20250305-WA0003-removebg-preview.png"
                   alt="RARITONE"
-                  className="cursor-pointer transition-all duration-300 luxury-float"
+                  className="cursor-pointer transition-all duration-500 ease-out navbar-logo"
                   onClick={() => navigate('/')}
                   style={{
                     height: isMobile ? '56px' : '72px',
                     width: 'auto',
                     maxWidth: isMobile ? '240px' : '320px',
                     objectFit: 'contain',
-                    filter: 'brightness(1.2) drop-shadow(0 0 20px rgba(148, 137, 121, 0.3))'
+                    filter: 'brightness(1.2) drop-shadow(0 0 20px rgba(148, 137, 121, 0.3))',
+                    opacity: isHomepage ? logoOpacity : 1,
+                    transform: isHomepage ? `scale(${logoScale})` : 'scale(1)'
                   }}
                 />
               )}

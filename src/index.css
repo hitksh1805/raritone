@@ -567,6 +567,22 @@
   box-shadow: 0 10px 30px rgba(148, 137, 121, 0.3);
 }
 
+/* LOGO TRANSITION ANIMATION */
+@keyframes logo-morph {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.3) translateY(-50vh);
+    opacity: 0.8;
+  }
+}
+
+.logo-transition {
+  animation: logo-morph 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
 /* MOBILE OPTIMIZATIONS */
 @media (max-width: 640px) {
   .btn-primary,

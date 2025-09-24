@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const LatestArrivalsCarousel: React.FC = () => {
     { id: 4, name: "Minimal Look Oversize T-Shirt", price: 599, image: "Raritone Collection/Minimal look Oversize Tshirt.jpg" }
   ];
 
-  const itemsPerView = 4;
+  const itemsPerView = window.innerWidth >= 1280 ? 4 : window.innerWidth >= 768 ? 3 : window.innerWidth >= 640 ? 2 : 1;
   const maxIndex = Math.max(0, products.length - itemsPerView);
 
   const nextSlide = () => {
@@ -26,41 +26,46 @@ const LatestArrivalsCarousel: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full">
-      {/* Navigation Arrows */}
+    <div className="relative w-full max-w-full">
+      {/* Translucent Glass Navigation Arrows */}
       <button
         onClick={prevSlide}
         disabled={currentIndex === 0}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/30 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
-        style={{ backdropFilter: 'blur(10px)' }}
+        className="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--text-primary)] hover:bg-white/20 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+        style={{ backdropFilter: 'blur(15px)' }}
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={28} />
       </button>
 
       <button
         onClick={nextSlide}
         disabled={currentIndex >= maxIndex}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/30 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
-        style={{ backdropFilter: 'blur(10px)' }}
+        className="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--text-primary)] hover:bg-white/20 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+        style={{ backdropFilter: 'blur(15px)' }}
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={28} />
       </button>
 
-      {/* Products Container */}
-      <div className="overflow-hidden px-16">
+      {/* Full Width Products Container with Proper Spacing */}
+      <div className="w-full overflow-hidden px-20">
         <motion.div
-          className="flex gap-6"
+          className="flex gap-8"
           animate={{ x: `${-currentIndex * (100 / itemsPerView)}%` }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          style={{ width: `${(products.length / itemsPerView) * 100}%` }}
         >
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex-shrink-0 cursor-pointer group rounded-2xl overflow-hidden bg-[var(--card-bg)] border border-[var(--border-color)] hover-lift"
-              style={{ width: `calc(25% - 18px)` }}
+              className="flex-shrink-0 cursor-pointer group rounded-2xl overflow-hidden bg-[var(--card-bg)] border border-[var(--border-color)] hover-lift shadow-lg"
+              style={{ 
+                width: `calc(${100 / itemsPerView}% - 32px)`,
+                marginLeft: '16px',
+                marginRight: '16px'
+              }}
               onClick={() => navigate('/catalog')}
             >
-              <div className="aspect-[3/4] overflow-hidden">
+              <div className="aspect-[3/4] overflow-hidden rounded-t-2xl">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -68,7 +73,7 @@ const LatestArrivalsCarousel: React.FC = () => {
                 />
               </div>
               <div className="p-6 text-center">
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">{product.name}</h3>
+                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2 line-clamp-2">{product.name}</h3>
                 <p className="text-xl font-bold text-[var(--accent-color)]">₹{product.price}</p>
               </div>
             </div>
@@ -76,20 +81,22 @@ const LatestArrivalsCarousel: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Dots Indicator */}
-      <div className="flex justify-center mt-8 space-x-2">
-        {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-[var(--accent-color)]' 
-                : 'bg-[var(--accent-color)]/30'
-            }`}
-          />
-        ))}
-      </div>
+      {/* Enhanced Dots Indicator */}
+      {maxIndex > 0 && (
+        <div className="flex justify-center mt-8 space-x-3">
+          {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentIndex 
+                  ? 'bg-[var(--accent-color)] scale-125' 
+                  : 'bg-[var(--accent-color)]/30 hover:bg-[var(--accent-color)]/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
