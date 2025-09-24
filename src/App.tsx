@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./components/ToastContainer";
+import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import { useLocation } from "react-router-dom";
 import NotFound from "./pages/NotFound";
