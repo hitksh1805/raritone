@@ -212,20 +212,21 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" style={{ zIndex: 2 }} />
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-8" style={{ zIndex: 3 }}>
+        <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-8" style={{ zIndex: 3 }} id="hero-content">
           <div className="p-8 sm:p-12 lg:p-16">
             <div className="mb-8">
               <img
-                src="/IMG-20250305-WA0003-removebg-preview.png"
+                src="/IMG-20250305-WA0003-removebg-preview.png" 
                 alt="RARITONE"
-                className="mx-auto w-full max-w-xs sm:max-w-2xl h-auto luxury-float"
+                className="mx-auto w-full max-w-xs sm:max-w-2xl h-auto luxury-float hero-logo"
+                id="hero-logo"
                 style={{ 
                   filter: 'drop-shadow(0 0 50px rgba(148, 137, 121, 0.8)) brightness(1.3)',
                 }}
               />
             </div>
 
-            <h1 className="hero-title mb-6">
+            <h1 className="hero-title mb-6 opacity-0" id="hero-heading">
               Fashion Meets Technology
             </h1>
 

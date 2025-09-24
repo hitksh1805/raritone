@@ -19,6 +19,8 @@ const Navbar: React.FC<NavbarProps> = memo(({ onSearchOpen, onCartOpen, pageTitl
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [logoScale, setLogoScale] = useState(1);
+  const [logoOpacity, setLogoOpacity] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, cart, logout } = useAuth();
@@ -43,7 +45,24 @@ const Navbar: React.FC<NavbarProps> = memo(({ onSearchOpen, onCartOpen, pageTitl
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const heroHeight = window.innerHeight;
+      const scrollProgress = Math.min(currentScrollY / (heroHeight * 0.8), 1);
+      
       setIsVisible(currentScrollY > 50);
+      setLogoScale(0.3 + (0.7 * (1 - scrollProgress)));
+      setLogoOpacity(Math.min(scrollProgress * 2, 1));
+      
+      // Animate hero heading
+      const heroHeading = document.getElementById('hero-heading');
+      if (heroHeading) {
+        if (currentScrollY > 200) {
+          heroHeading.style.opacity = '1';
+          heroHeading.style.transform = 'translateY(0)';
+        } else {
+          heroHeading.style.opacity = '0';
+          heroHeading.style.transform = 'translateY(20px)';
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
