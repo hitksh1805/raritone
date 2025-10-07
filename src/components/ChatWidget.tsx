@@ -112,6 +112,7 @@ const ChatWidget: React.FC = () => {
       <button
         onClick={toggleChat}
         className="fixed bottom-6 right-6 z-40 px-6 py-4 rounded-full transition-all duration-300 luxury-chat flex items-center space-x-3 luxury-glow hover-lift"
+        style={{ border: '1.5px solid var(--border-color)' }}
       >
         {/* Logo container */}
         <div className="w-10 h-10 relative rounded-full overflow-hidden flex items-center justify-center border-2 border-[var(--border-color)]">
