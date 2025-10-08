@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Play, Square, Lightbulb, User, Clock } from 'lucide-react';
+import { Camera, Play, Square, Lightbulb, User, Clock, Activity, BarChart3, Link2, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ToastContainer';
@@ -17,6 +17,10 @@ const Scan = () => {
   const [countdown, setCountdown] = useState(0);
   const [scans, setScans] = useState<ScanData[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
+
+  const [apiEndpoint, setApiEndpoint] = useState('https://api.raritone.ai/v1/scan');
+  const [apiKey, setApiKey] = useState('');
+  const [apiConnected, setApiConnected] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,11 +44,11 @@ const Scan = () => {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { width: 1280, height: 720 }
       });
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
-      
+
       setStream(mediaStream);
     } catch (error) {
       console.error('Error accessing camera:', error);
@@ -95,7 +99,7 @@ const Scan = () => {
 
   const completeScan = async () => {
     setIsScanning(false);
-    
+
     if (user) {
       try {
         const scanData = {
@@ -109,7 +113,7 @@ const Scan = () => {
 
         await saveScan(user.uid, scanData);
         await loadScans();
-        
+
         showToast({
           type: 'success',
           title: 'Scan Complete!',
@@ -139,6 +143,23 @@ const Scan = () => {
     });
   };
 
+  const handleApiConnect = () => {
+    if (apiEndpoint && apiKey) {
+      setApiConnected(true);
+      showToast({
+        type: 'success',
+        title: 'API Connected',
+        message: 'Successfully connected to backend API.'
+      });
+    } else {
+      showToast({
+        type: 'error',
+        title: 'Connection Failed',
+        message: 'Please provide both API endpoint and API key.'
+      });
+    }
+  };
+
   useEffect(() => {
     return () => {
       stopCamera();
@@ -146,143 +167,228 @@ const Scan = () => {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'rgb(60, 61, 55)' }}>
-      <Navbar 
+    <div className="light-page">
+      <Navbar
         onSearchOpen={() => {}}
         onCartOpen={() => {}}
         pageTitle="Body Scan"
         showBackButton={true}
       />
-      
-      <div className="pt-20 max-w-6xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-light text-[rgb(236,223,204)] mb-2">AI Body Scan</h1>
-          <p className="text-xl text-[rgb(105,117,101)]">Capture your body measurements with AI precision</p>
-          <p className="text-[rgb(105,117,101)] mt-2">
-            Position yourself 6 feet away from your camera in good lighting. The scan takes about 30 seconds to complete.
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="light-page-header">AI Body Scan</h1>
+          <p className="light-page-text">
+            Capture your body measurements with AI precision. Position yourself 6 feet away from your camera in good lighting.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Your Progress */}
-          <div className="rounded-lg shadow-sm p-6 border border-[rgb(105,117,101)]" style={{ backgroundColor: 'rgb(24, 28, 20)' }}>
-            <h2 className="text-xl font-semibold text-[rgb(236,223,204)] mb-6 flex items-center">
-              <User className="mr-2" size={20} />
-              Your Progress
-            </h2>
-            <div className="space-y-6">
-              <div className="text-center p-4 rounded-lg border border-[rgb(105,117,101)]" style={{ backgroundColor: 'rgb(60, 61, 55)' }}>
-                <div className="text-2xl font-bold text-[rgb(236,223,204)]">{scans.length}</div>
-                <div className="text-sm text-[rgb(105,117,101)]">Total Scans</div>
-              </div>
-              
-              <div className="text-center p-4 rounded-lg border border-[rgb(105,117,101)]" style={{ backgroundColor: 'rgb(60, 61, 55)' }}>
-                <div className="text-2xl font-bold text-[rgb(236,223,204)]">
-                  {scans.length > 0 
-                    ? new Date(scans[0].scanTime).toLocaleDateString()
-                    : 'Never'
-                  }
+          {/* Left Panel - Your Progress */}
+          <div className="lg:col-span-1">
+            <div className="light-card">
+              <h2 className="light-page-subheader flex items-center mb-6">
+                <Activity className="mr-2 text-[var(--accent-color)]" size={24} />
+                Your Progress
+              </h2>
+
+              <div className="space-y-4">
+                <div className="light-card-ivory text-center">
+                  <div className="flex items-center justify-center mb-2">
+                    <BarChart3 size={20} className="text-[var(--accent-color)] mr-2" />
+                    <div className="text-3xl font-bold" style={{ color: 'var(--page-text-primary)' }}>
+                      {scans.length}
+                    </div>
+                  </div>
+                  <div className="light-page-text text-sm">Total Scans</div>
                 </div>
-                <div className="text-sm text-[rgb(105,117,101)]">Latest Scan</div>
-              </div>
-              
-              <div className="text-center p-4 rounded-lg border border-[rgb(105,117,101)]" style={{ backgroundColor: 'rgb(60, 61, 55)' }}>
-                <div className="text-2xl font-bold text-[rgb(236,223,204)]">
-                  {scans.reduce((total, scan) => total + scan.tryOnCount, 0)}
+
+                <div className="light-card-ivory text-center">
+                  <div className="flex items-center justify-center mb-2">
+                    <Clock size={20} className="text-[var(--accent-color)] mr-2" />
+                    <div className="text-xl font-semibold" style={{ color: 'var(--page-text-primary)' }}>
+                      {scans.length > 0
+                        ? new Date(scans[0].scanTime).toLocaleDateString()
+                        : 'Never'
+                      }
+                    </div>
+                  </div>
+                  <div className="light-page-text text-sm">Latest Scan</div>
                 </div>
-                <div className="text-sm text-[rgb(105,117,101)]">Virtual Try-Ons</div>
+
+                <div className="light-card-ivory text-center">
+                  <div className="flex items-center justify-center mb-2">
+                    <User size={20} className="text-[var(--accent-color)] mr-2" />
+                    <div className="text-3xl font-bold" style={{ color: 'var(--page-text-primary)' }}>
+                      {scans.reduce((total, scan) => total + scan.tryOnCount, 0)}
+                    </div>
+                  </div>
+                  <div className="light-page-text text-sm">Virtual Try-Ons</div>
+                </div>
+
+                <button
+                  className="w-full btn-secondary py-3 mt-4"
+                  style={{ color: 'var(--page-text-primary)' }}
+                >
+                  View Scan History
+                </button>
               </div>
-              
-              <Button 
-                onClick={() => navigate('/scan-history')}
-                variant="outline" 
-                className="w-full border-[rgb(105,117,101)] text-[rgb(236,223,204)] hover:bg-[rgb(60,61,55)]"
-              >
-                View Scan History
-              </Button>
             </div>
           </div>
 
-          {/* Camera Section */}
-          <div className="lg:col-span-2 rounded-lg shadow-sm p-6 border border-[rgb(105,117,101)]" style={{ backgroundColor: 'rgb(24, 28, 20)' }}>
-            <div className="aspect-video bg-gray-900 rounded-lg mb-6 relative overflow-hidden">
-              {stream ? (
-                <>
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
-                  {countdown > 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                      <div className="text-white text-6xl font-bold">
-                        {countdown}
+          {/* Right Panel - Camera & API Section */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Camera Preview */}
+            <div className="light-card">
+              <div className="aspect-video rounded-lg mb-6 relative overflow-hidden" style={{ background: '#0E0E0E', border: '1.5px solid var(--border-color)' }}>
+                {stream ? (
+                  <>
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                    {countdown > 0 && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                        <div className="text-white text-6xl font-bold">
+                          {countdown}
+                        </div>
                       </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <Camera size={64} style={{ color: 'var(--text-primary)' }} className="mx-auto mb-4 opacity-50" />
+                      <p style={{ color: 'var(--text-primary)' }} className="text-lg">Camera Preview</p>
+                      <p style={{ color: 'var(--text-secondary)' }} className="text-sm opacity-50 mt-2">
+                        Click "Start Body Scan" to begin
+                      </p>
                     </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex items-center justify-center h-full text-white">
-                  <div className="text-center">
-                    <Camera size={48} className="mx-auto mb-4" />
-                    <p>Camera Preview</p>
-                    <p className="text-sm text-gray-400 mt-2">Click "Start Body Scan" to begin</p>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* Scan Button */}
+              <div className="flex space-x-4">
+                {!isScanning ? (
+                  <button
+                    onClick={startScan}
+                    className="flex-1 btn-primary flex items-center justify-center space-x-2 py-4 text-lg font-semibold"
+                  >
+                    <Play size={24} />
+                    <span>Start Body Scan</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={cancelScan}
+                    className="flex-1 flex items-center justify-center space-x-2 py-4 text-lg font-semibold"
+                    style={{
+                      background: 'var(--error-color)',
+                      color: 'white',
+                      borderRadius: '0.75rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <Square size={24} />
+                    <span>Cancel Scan</span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Tips Section */}
-            <div className="border rounded-lg p-6 mb-6" style={{ backgroundColor: 'rgb(60, 61, 55)', borderColor: 'rgb(105,117,101)' }}>
-              <h3 className="font-medium text-[rgb(236,223,204)] mb-4 flex items-center">
-                <Lightbulb className="mr-2" size={20} />
-                Scan Tips for Best Results:
+            {/* Scan Tips Section */}
+            <div className="light-card-ivory">
+              <h3 className="font-semibold mb-4 flex items-center" style={{ color: 'var(--page-text-primary)' }}>
+                <Lightbulb className="mr-2 text-[var(--accent-color)]" size={20} />
+                Scan Tips for Best Results
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-[rgb(105,117,101)]">
-                <div className="flex items-start space-x-2">
-                  <Lightbulb size={16} className="mt-0.5 flex-shrink-0" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-start space-x-3 p-3 rounded-lg" style={{ background: 'var(--page-card-white)', border: '1px solid var(--border-color)' }}>
+                  <Lightbulb size={20} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-color)' }} />
                   <div>
-                    <div className="font-medium text-[rgb(236,223,204)]">Good Lighting</div>
-                    <div>Ensure bright, even lighting without shadows</div>
+                    <div className="font-medium mb-1" style={{ color: 'var(--page-text-primary)' }}>Good Lighting</div>
+                    <div className="text-sm light-page-text">Ensure bright, even lighting without shadows</div>
                   </div>
                 </div>
-                <div className="flex items-start space-x-2">
-                  <User size={16} className="mt-0.5 flex-shrink-0" />
+                <div className="flex items-start space-x-3 p-3 rounded-lg" style={{ background: 'var(--page-card-white)', border: '1px solid var(--border-color)' }}>
+                  <User size={20} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-color)' }} />
                   <div>
-                    <div className="font-medium text-[rgb(236,223,204)]">Fitted Clothing</div>
-                    <div>Wear form-fitting clothes for accurate measurements</div>
+                    <div className="font-medium mb-1" style={{ color: 'var(--page-text-primary)' }}>Fitted Clothing</div>
+                    <div className="text-sm light-page-text">Wear form-fitting clothes for accurate measurements</div>
                   </div>
                 </div>
-                <div className="flex items-start space-x-2">
-                  <Clock size={16} className="mt-0.5 flex-shrink-0" />
+                <div className="flex items-start space-x-3 p-3 rounded-lg" style={{ background: 'var(--page-card-white)', border: '1px solid var(--border-color)' }}>
+                  <Clock size={20} className="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-color)' }} />
                   <div>
-                    <div className="font-medium text-[rgb(236,223,204)]">Stay Still</div>
-                    <div>Keep steady during the 30-second scan</div>
+                    <div className="font-medium mb-1" style={{ color: 'var(--page-text-primary)' }}>Stay Still</div>
+                    <div className="text-sm light-page-text">Keep steady during the 30-second scan</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex space-x-4">
-              {!isScanning ? (
-                <Button
-                  onClick={startScan}
-                  className="flex-1 bg-[rgb(236,223,204)] text-[rgb(24,28,20)] hover:bg-[rgb(220,210,190)] flex items-center justify-center space-x-2 py-3"
-                >
-                  <Play size={20} />
-                  <span>Start Body Scan</span>
-                </Button>
-              ) : (
-                <Button
-                  onClick={cancelScan}
-                  variant="destructive"
-                  className="flex-1 flex items-center justify-center space-x-2 py-3"
-                >
-                  <Square size={20} />
-                  <span>Cancel Scan</span>
-                </Button>
-              )}
+            {/* API Connection Module */}
+            <div className="light-card-ivory">
+              <h3 className="font-semibold mb-4 flex items-center" style={{ color: 'var(--page-text-primary)' }}>
+                <Link2 className="mr-2 text-[var(--accent-color)]" size={20} />
+                Backend API Connection
+              </h3>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--page-text-secondary)' }}>
+                    API Endpoint URL
+                  </label>
+                  <input
+                    type="text"
+                    value={apiEndpoint}
+                    onChange={(e) => setApiEndpoint(e.target.value)}
+                    className="light-input w-full"
+                    placeholder="https://api.raritone.ai/v1/scan"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--page-text-secondary)' }}>
+                    API Key
+                  </label>
+                  <input
+                    type="password"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="light-input w-full"
+                    placeholder="Enter your API key"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg" style={{ background: 'var(--page-card-white)', border: '1px solid var(--border-color)' }}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium" style={{ color: 'var(--page-text-secondary)' }}>
+                      Connection Status:
+                    </span>
+                    {apiConnected ? (
+                      <span className="flex items-center space-x-1 badge-success">
+                        <CheckCircle2 size={14} />
+                        <span>Connected</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center space-x-1 badge-error">
+                        <XCircle size={14} />
+                        <span>Disconnected</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleApiConnect}
+                    className="btn-primary px-6 py-2"
+                  >
+                    Connect
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

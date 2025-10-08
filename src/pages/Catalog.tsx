@@ -31,7 +31,6 @@ const Catalog = () => {
   const { showToast } = useToast();
   const location = useLocation();
 
-  // Enhanced mock data with proper aspect ratios and clean stock management
   const mockProducts: Product[] = [
     {
       id: '1',
@@ -77,7 +76,7 @@ const Catalog = () => {
       price: 434.13,
       imageURL: 'https://static.wixstatic.com/media/3903b5_4fde7750734f4f188841c462d77d27bb~mv2.jpg/v1/fill/w_500,h_667,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/3903b5_4fde7750734f4f188841c462d77d27bb~mv2.jpg',
       category: 'Tops',
-      stock: 0, // Out of stock
+      stock: 0,
       tags: ['Tshirt', 'luxury', 'comfort'],
       sizes: ['XS', 'S', 'M', 'L'],
       createdAt: new Date()
@@ -96,14 +95,12 @@ const Catalog = () => {
       colors: ['Black', 'Brown'],
       createdAt: new Date()
     },
-
   ];
 
   useEffect(() => {
     loadProducts();
     loadWishlist();
-    
-    // Check for category filter from URL params
+
     const urlParams = new URLSearchParams(location.search);
     const categoryParam = urlParams.get('category');
     if (categoryParam) {
@@ -116,7 +113,6 @@ const Catalog = () => {
   }, [products, filters, searchQuery]);
 
   const loadProducts = async () => {
-    // Instant loading with mock data
     setProducts(mockProducts);
   };
 
@@ -131,7 +127,7 @@ const Catalog = () => {
     let filtered = [...products];
 
     if (searchQuery) {
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -142,7 +138,6 @@ const Catalog = () => {
       filtered = filtered.filter(product => product.category === filters.category);
     }
 
-    // Stock status filter
     if (filters.stockStatus === 'inStock') {
       filtered = filtered.filter(product => product.stock > 0);
     } else if (filters.stockStatus === 'outOfStock') {
@@ -195,7 +190,6 @@ const Catalog = () => {
         });
       }
     } else {
-      // Add to localStorage for guest users
       addToLocalCart(cartItem);
       showToast({
         type: 'success',
@@ -205,31 +199,27 @@ const Catalog = () => {
     }
   };
 
-  // UPDATED: Add to wishlist works for all users
   const addToWishlist = (productId: string) => {
     const currentWishlist = [...wishlist];
     if (!currentWishlist.includes(productId)) {
       currentWishlist.push(productId);
       setWishlist(currentWishlist);
       localStorage.setItem('wishlist', JSON.stringify(currentWishlist));
-      
-      // Dispatch custom event to update navbar count
+
       window.dispatchEvent(new Event('wishlistUpdated'));
-      
+
       showToast({
         type: 'success',
         title: 'Added to Wishlist',
         message: 'Item has been saved to your wishlist!'
       });
     } else {
-      // Remove from wishlist
       const updatedWishlist = currentWishlist.filter(id => id !== productId);
       setWishlist(updatedWishlist);
       localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-      
-      // Dispatch custom event to update navbar count
+
       window.dispatchEvent(new Event('wishlistUpdated'));
-      
+
       showToast({
         type: 'info',
         title: 'Removed from Wishlist',
@@ -240,7 +230,7 @@ const Catalog = () => {
 
   const quickAddToCart = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
-    
+
     if (product.stock === 0) {
       showToast({
         type: 'warning',
@@ -250,50 +240,53 @@ const Catalog = () => {
       return;
     }
 
-    // For items with sizes/colors, open modal instead
     if ((product.sizes && product.sizes.length > 0) || (product.colors && product.colors.length > 0)) {
       handleProductClick(product);
       return;
     }
 
-    // Quick add for simple items
     handleAddToCart(product, 1);
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'rgb(60, 61, 55)' }}>
-      <Navbar 
+    <div className="light-page">
+      <Navbar
         onSearchOpen={() => {}}
         onCartOpen={() => {}}
         pageTitle="Fashion Catalog"
         showBackButton={true}
       />
-      
-      <div className="pt-20 max-w-7xl mx-auto px-4 py-8">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="light-page-header">Fashion Catalog</h1>
+          <p className="light-page-text">Discover our curated collection of premium fashion pieces</p>
+        </div>
+
         {/* Search and Filters */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-lg shadow-sm p-4 sm:p-6 mb-8 border border-[rgb(105,117,101)]"
-          style={{ backgroundColor: 'rgb(24, 28, 20)' }}
+          className="light-card mb-8"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
             {/* Search */}
             <div className="lg:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[rgb(105,117,101)]" size={20} />
-              <Input
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2" style={{ color: 'var(--page-text-muted)' }} size={20} />
+              <input
+                type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-[rgb(60,61,55)] border-[rgb(105,117,101)] text-[rgb(236,223,204)] placeholder-[rgb(105,117,101)]"
+                className="light-input w-full pl-10"
               />
             </div>
 
             {/* Category Filter */}
             <select
               value={filters.category}
-              onChange={(e) => setFilters({...filters, category: e.target.value})}
-              className="px-4 py-2 border border-[rgb(105,117,101)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(105,117,101)] bg-[rgb(60,61,55)] text-[rgb(236,223,204)]"
+              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+              className="light-input"
             >
               <option value="">All Categories</option>
               <option value="Tops">Tops</option>
@@ -306,8 +299,8 @@ const Catalog = () => {
             {/* Stock Status Filter */}
             <select
               value={filters.stockStatus}
-              onChange={(e) => setFilters({...filters, stockStatus: e.target.value})}
-              className="px-4 py-2 border border-[rgb(105,117,101)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(105,117,101)] bg-[rgb(60,61,55)] text-[rgb(236,223,204)]"
+              onChange={(e) => setFilters({ ...filters, stockStatus: e.target.value })}
+              className="light-input"
             >
               <option value="">All Stock</option>
               <option value="inStock">In Stock</option>
@@ -317,8 +310,8 @@ const Catalog = () => {
             {/* Size Filter */}
             <select
               value={filters.size}
-              onChange={(e) => setFilters({...filters, size: e.target.value})}
-              className="px-4 py-2 border border-[rgb(105,117,101)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(105,117,101)] bg-[rgb(60,61,55)] text-[rgb(236,223,204)]"
+              onChange={(e) => setFilters({ ...filters, size: e.target.value })}
+              className="light-input"
             >
               <option value="">All Sizes</option>
               <option value="XS">XS</option>
@@ -332,8 +325,8 @@ const Catalog = () => {
             {/* Sort */}
             <select
               value={filters.sortBy}
-              onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
-              className="px-4 py-2 border border-[rgb(105,117,101)] rounded-md focus:outline-none focus:ring-2 focus:ring-[rgb(105,117,101)] bg-[rgb(60,61,55)] text-[rgb(236,223,204)]"
+              onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+              className="light-input"
             >
               <option value="newest">Newest</option>
               <option value="popular">Popular</option>
@@ -345,32 +338,32 @@ const Catalog = () => {
 
         {/* Results Count */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-[rgb(105,117,101)]">
-            Showing {filteredProducts.length} of {products.length} products
+          <p className="light-page-text">
+            Showing <span className="font-semibold" style={{ color: 'var(--page-text-primary)' }}>{filteredProducts.length}</span> of <span className="font-semibold" style={{ color: 'var(--page-text-primary)' }}>{products.length}</span> products
             {filters.category && (
-              <span className="ml-2 text-[rgb(236,223,204)]">
+              <span className="ml-2 font-medium" style={{ color: 'var(--page-text-secondary)' }}>
                 in {filters.category}
               </span>
             )}
           </p>
         </div>
 
-        {/* RESPONSIVE Product Grid with Wishlist Hearts */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        {/* Product Grid with Proper Spacing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-[rgb(105,117,101)] cursor-pointer group"
-              style={{ backgroundColor: 'rgb(24, 28, 20)' }}
+              className="light-card-ivory overflow-hidden cursor-pointer group hover:shadow-xl transition-all duration-300"
               onClick={() => handleProductClick(product)}
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
+              style={{ padding: '0' }}
             >
-              {/* RESPONSIVE Image Container */}
-              <div className="w-full h-64 sm:h-72 lg:h-80 overflow-hidden relative">
+              {/* Image Container with Fixed Aspect Ratio */}
+              <div className="w-full aspect-[3/4] overflow-hidden relative">
                 <motion.img
                   src={hoveredProduct === product.id && product.backImageURL ? product.backImageURL : product.imageURL}
                   alt={product.name}
@@ -378,11 +371,11 @@ const Catalog = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 />
-                
+
                 {/* Out of Stock Overlay */}
                 {product.stock === 0 && (
-                  <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                    <span className="text-white font-semibold text-lg bg-black/50 px-4 py-2 rounded-lg">
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                    <span className="badge-error text-sm font-semibold px-4 py-2">
                       Out of Stock
                     </span>
                   </div>
@@ -390,7 +383,7 @@ const Catalog = () => {
 
                 {/* Action Buttons Overlay */}
                 <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {/* WISHLIST HEART BUTTON - Available for all users */}
+                  {/* Wishlist Heart */}
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -398,55 +391,70 @@ const Catalog = () => {
                       e.stopPropagation();
                       addToWishlist(product.id!);
                     }}
-                    className={`w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center ${
-                      wishlist.includes(product.id!)
-                        ? 'bg-red-500 text-white'
-                        : 'bg-black/50 text-white hover:bg-black/70'
-                    }`}
+                    className={`w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center ${wishlist.includes(product.id!)
+                      ? 'bg-red-500 text-white'
+                      : 'bg-white/90 text-gray-700 hover:bg-white'
+                      }`}
+                    style={{
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
                   >
-                    <Heart 
-                      size={16} 
-                      className={wishlist.includes(product.id!) ? 'fill-current' : ''} 
+                    <Heart
+                      size={18}
+                      className={wishlist.includes(product.id!) ? 'fill-current' : ''}
                     />
                   </motion.button>
 
-                  {/* QUICK ADD TO CART BUTTON */}
+                  {/* Quick Add to Cart */}
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={(e) => quickAddToCart(e, product)}
                     disabled={product.stock === 0}
-                    className="w-10 h-10 bg-[rgb(236,223,204)] text-[rgb(24,28,20)] rounded-full hover:bg-[rgb(220,210,190)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                    className="w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed btn-primary"
+                    style={{
+                      padding: '0',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
                   >
-                    <ShoppingBag size={16} />
+                    <ShoppingBag size={18} />
                   </motion.button>
                 </div>
               </div>
-              
-              {/* RESPONSIVE Product Info */}
-              <div className="p-3 sm:p-4">
-                <h3 className="font-medium text-[rgb(236,223,204)] mb-1 text-sm sm:text-base truncate">{product.name}</h3>
-                <p className="text-xs sm:text-sm text-[rgb(105,117,101)] mb-2">{product.category}</p>
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-base sm:text-lg font-semibold text-[rgb(236,223,204)]">₹{product.price}</p>
-                  {/* Clean stock status */}
+
+              {/* Product Info */}
+              <div className="p-4">
+                <h3 className="font-semibold mb-1 text-base truncate" style={{ color: 'var(--page-text-primary)' }}>
+                  {product.name}
+                </h3>
+                <p className="text-sm light-page-text mb-3">{product.category}</p>
+
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-lg font-bold" style={{ color: 'var(--page-text-primary)' }}>
+                    ₹{product.price.toFixed(2)}
+                  </p>
                   {product.stock > 0 ? (
-                    <span className="text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded">
+                    <span className="badge-success text-xs">
                       In Stock
                     </span>
                   ) : (
-                    <span className="text-xs text-red-400 bg-red-900/20 px-2 py-1 rounded">
+                    <span className="badge-error text-xs">
                       Out of Stock
                     </span>
                   )}
                 </div>
-                
+
                 {product.tags && product.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
+                  <div className="flex flex-wrap gap-2">
                     {product.tags.slice(0, 2).map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 text-xs bg-[rgb(60,61,55)] text-[rgb(105,117,101)] rounded"
+                        className="px-2 py-1 text-xs rounded"
+                        style={{
+                          background: 'var(--page-bg)',
+                          color: 'var(--page-text-muted)',
+                          border: '1px solid var(--border-color)'
+                        }}
                       >
                         {tag}
                       </span>
@@ -459,9 +467,9 @@ const Catalog = () => {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-[rgb(105,117,101)]">No products found matching your criteria.</p>
-            <Button 
+          <div className="text-center py-16">
+            <p className="light-page-text text-lg mb-4">No products found matching your criteria.</p>
+            <button
               onClick={() => {
                 setSearchQuery('');
                 setFilters({
@@ -472,10 +480,10 @@ const Catalog = () => {
                   stockStatus: ''
                 });
               }}
-              className="mt-4 bg-[rgb(236,223,204)] text-[rgb(24,28,20)] hover:bg-[rgb(220,210,190)]"
+              className="btn-primary px-6 py-3"
             >
-              Clear Filters
-            </Button>
+              Clear All Filters
+            </button>
           </div>
         )}
       </div>

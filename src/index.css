@@ -21,6 +21,18 @@
     --charcoal: #121212; /* Deep Charcoal */
     --glow-color: rgba(242, 238, 215, 0.15); /* Ivory Glow */
 
+    /* Light Mode Colors for Inner Pages */
+    --page-bg: #F4F6FF; /* Light page background */
+    --page-card-bg: #EFF3EA; /* Ivory-white card background */
+    --page-card-white: #FFFFFF; /* Pure white for cards */
+    --page-text-primary: #1A1A19; /* Dark text for light pages */
+    --page-text-secondary: #333333; /* Secondary dark text */
+    --page-text-muted: #808080; /* Muted gray-blue text */
+    --badge-success-bg: #D7EED1; /* Success badge background */
+    --badge-success-text: #1B5E20; /* Success badge text */
+    --badge-error-bg: #FBEAEA; /* Error badge background */
+    --badge-error-text: #B71C1C; /* Error badge text */
+
     /* Tailwind Variables */
     --background: 26 26 25; /* #1A1A19 */
     --foreground: 242 238 215; /* #F2EED7 */
@@ -41,7 +53,7 @@
     --border: 242 238 215; /* #F2EED7 */
     --input: 42 42 42; /* #2A2A2A */
     --ring: 242 238 215; /* #F2EED7 */
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 }
 
@@ -606,6 +618,99 @@
   animation: logo-morph 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
+/* LIGHT PAGE STYLING */
+.light-page {
+  background: var(--page-bg);
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.light-card {
+  background: var(--page-card-white);
+  border: 1.5px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.light-card:hover {
+  box-shadow: 0 4px 16px rgba(242, 238, 215, 0.2);
+}
+
+.light-card-ivory {
+  background: var(--page-card-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Page Headers for Light Pages */
+.light-page-header {
+  color: var(--page-text-primary);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.light-page-subheader {
+  color: var(--page-text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.light-page-text {
+  color: var(--page-text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Badge Styling */
+.badge-success {
+  background: var(--badge-success-bg);
+  color: var(--badge-success-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-error {
+  background: var(--badge-error-bg);
+  color: var(--badge-error-text);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Light Page Input Styling */
+.light-input {
+  background: var(--page-card-white);
+  border: 1.5px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--page-text-primary);
+  padding: 0.75rem 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.light-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(242, 238, 215, 0.1);
+}
+
+.light-input::placeholder {
+  color: var(--page-text-muted);
+  opacity: 0.6;
+}
+
 /* MOBILE OPTIMIZATIONS */
 @media (max-width: 640px) {
   .btn-primary,
@@ -620,5 +725,9 @@
 
   .feature-card {
     padding: 1.5rem;
+  }
+
+  .light-page {
+    padding-top: 100px;
   }
 }
